@@ -489,44 +489,24 @@ export function NewListing({
   );
 
   return (
-    <section className="flex-1 flex flex-col justify-center bg-alabaster px-3 py-5 sm:px-5 sm:py-7">
-      <main className="w-full max-w-2xl mx-auto flex flex-col">
-        {/* Mobile Top Brand Mark & Step Pill */}
-        <div className="lg:hidden mb-2.5 flex items-center justify-between gap-2 px-1 shrink-0">
-          <div className="flex items-center gap-2">
-            <BrandMark className="w-6 h-6 text-forest-900" />
-            <span className="text-lg font-extrabold tracking-tight text-ink">area</span>
-          </div>
-          <div className="bg-white/90 backdrop-blur px-3 py-1 rounded-full border border-black/5 shadow-sm">
-            <span className="text-xs font-extrabold text-forest-900">
-              Step <span>{step}/4</span>
-            </span>
-          </div>
-        </div>
-
-        <div className="flex-1 min-h-0 flex flex-col">
-          {/* MULTI-STEP PAGINATED WIZARD CARD */}
-          <section className="bg-white rounded-[28px] sm:rounded-[32px] p-5 sm:p-8 shadow-[0_24px_60px_-15px_rgba(16,42,131,0.08)] border border-black/[0.04] flex flex-col justify-between gap-4">
-            {/* Top Stepper Bar & Utility */}
-            <div className="flex items-center justify-between gap-3 mb-1 shrink-0">
-              <div className="hidden lg:flex items-center gap-2">
-                <BrandMark className="w-7 h-7" />
-                <span className="text-xl font-extrabold tracking-tight text-ink">area</span>
-              </div>
-
-              <div className="flex-1 lg:max-w-sm flex items-center gap-2">
-                {[1, 2, 3, 4].map((i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => goToStep(i)}
-                    aria-label={`Step ${i}`}
-                    className={`h-1.5 flex-1 rounded-full transition-all cursor-pointer ${
-                      i <= step ? "bg-forest-900" : "bg-alabaster-card"
-                    }`}
-                  />
-                ))}
-              </div>
+    <section className="flex-1 flex flex-col bg-white">
+      <main className="w-full max-w-2xl mx-auto flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col">
+          {/* FULL-SCREEN WIZARD — no outer wrapper, white fills the viewport */}
+          <section className="flex-1 flex flex-col justify-between gap-4 px-5 sm:px-8 pt-6 sm:pt-8 pb-6 sm:pb-8">
+            {/* Progress bar only — no brand mark, no step pill */}
+            <div className="flex items-center gap-2 shrink-0">
+              {[1, 2, 3, 4].map((i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => goToStep(i)}
+                  aria-label={`Step ${i}`}
+                  className={`h-1.5 flex-1 rounded-full transition-all cursor-pointer ${
+                    i <= step ? "bg-forest-900" : "bg-alabaster-card"
+                  }`}
+                />
+              ))}
             </div>
 
             {/* FORM PAGES CONTAINER */}
@@ -998,7 +978,7 @@ export function NewListing({
             </form>
 
             {/* BOTTOM PAGINATION CONTROLS */}
-            <div className="pt-4 border-t border-black/5 flex items-center justify-between gap-3 shrink-0">
+            <div className="pt-4 border-t border-forest-900/8 flex items-center justify-between gap-3 shrink-0">
               {step > 1 ? (
                 <button
                   type="button"
@@ -1033,63 +1013,50 @@ export function NewListing({
         </div>
       </main>
 
-      {/* PUBLISHED / DETAIL SHEET MODAL */}
       {published && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-forest-950/60 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-[32px] bg-white p-6 sm:p-8 shadow-2xl border border-black/5">
-            <div className="flex items-center justify-between mb-4">
-              <span className="px-3 py-1 rounded-full bg-limepop text-forest-950 text-xs font-extrabold uppercase tracking-wider">
-                Listing Ready
-              </span>
-              <button
-                type="button"
-                onClick={() => setPublished(null)}
-                aria-label="Close"
-                className="w-9 h-9 rounded-full bg-alabaster-light hover:bg-alabaster flex items-center justify-center text-ink font-bold cursor-pointer border border-black/5"
-              >
-                ✕
-              </button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-5 bg-forest-950/60 backdrop-blur-sm">
+          <div className="w-full max-w-sm rounded-[32px] bg-white p-7 shadow-2xl border border-black/[0.06] flex flex-col items-center text-center gap-5">
+            {/* Badge */}
+            <span className="px-3.5 py-1.5 rounded-full bg-limepop text-forest-950 text-[11px] font-extrabold uppercase tracking-wider">
+              Listing Ready
+            </span>
+
+            {/* Icon */}
+            <div className="w-16 h-16 rounded-full bg-limepop-soft flex items-center justify-center">
+              <svg className="w-8 h-8 text-forest-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
             </div>
 
-              <h3 className="text-2xl font-extrabold text-ink tracking-tight">
+            {/* Text */}
+            <div>
+              <h3 className="text-[22px] font-extrabold text-ink tracking-tight leading-tight">
                 {successHeading || "Your listing is live."}
               </h3>
-              <p className="text-xs sm:text-sm text-ink-muted mt-1">
-                {successDescription || (
-                  <>
-                    Saved as <span className="font-extrabold text-forest-900">{published.lotId}</span>{" "}
-                    in warehub_listings. Copy the brief to share on WhatsApp or property portals.
-                  </>
-                )}
+              <p className="text-sm text-ink-muted mt-2 leading-relaxed">
+                Saved as{" "}
+                <span className="font-extrabold text-forest-900">{published.lotId}</span>
+                {" "}in warehub_listings.
               </p>
-
-            <div className="mt-4 p-4 rounded-2xl bg-alabaster-light text-xs font-medium text-ink whitespace-pre-line leading-relaxed max-h-52 overflow-y-auto border border-black/5">
-              {published.brief}
             </div>
 
-            <div className="mt-5 grid grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={copyBrief}
-                className="py-3.5 px-4 rounded-full bg-limepop hover:bg-limepop-hover text-forest-950 font-extrabold text-xs transition-colors cursor-pointer"
-              >
-                Copy Brief
-              </button>
+            {/* Action buttons */}
+            <div className="w-full flex flex-col gap-2.5 pt-1">
               <button
                 type="button"
                 onClick={handlePrimarySuccess}
-                className="py-3.5 px-4 rounded-full bg-forest-900 text-white font-bold text-xs hover:bg-forest-800 transition-colors cursor-pointer"
+                className="w-full py-3.5 rounded-full bg-forest-900 hover:bg-forest-800 text-white font-extrabold text-sm transition-colors cursor-pointer"
               >
-                {primarySuccessLabel || "View Showcase"}
+                {primarySuccessLabel || "View Your Listing"}
+              </button>
+              <button
+                type="button"
+                onClick={handleSecondarySuccess}
+                className="w-full py-3.5 rounded-full bg-alabaster hover:bg-alabaster-card text-ink font-bold text-sm transition-colors cursor-pointer border border-black/5"
+              >
+                {secondarySuccessLabel || "List another property"}
               </button>
             </div>
-            <button
-              type="button"
-              onClick={handleSecondarySuccess}
-              className="w-full mt-3 py-3 rounded-full bg-alabaster hover:bg-alabaster-card text-ink font-bold text-xs transition-colors cursor-pointer"
-            >
-              {secondarySuccessLabel || "List another property"}
-            </button>
           </div>
         </div>
       )}
