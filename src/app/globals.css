@@ -1,0 +1,190 @@
+@import "tailwindcss";
+
+/* ============================================================
+   area design system — the palette + type used across WAREHUB
+   ============================================================ */
+@theme {
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-jakarta), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --color-alabaster: #f6f7fb;
+  --color-alabaster-light: #ffffff;
+  --color-alabaster-card: #eaedf5;
+
+  --color-forest-950: #08174b;
+  --color-forest-900: #102a83;
+  --color-forest-800: #183ba8;
+  --color-forest-700: #254ec9;
+
+  --color-limepop: #f3d27a;
+  --color-limepop-hover: #e8c15d;
+  --color-limepop-soft: #f3d27a38;
+
+  --color-ink: #141714;
+  --color-ink-muted: #5d635d;
+
+  --shadow-card: 0 24px 60px -15px rgba(16, 42, 131, 0.08);
+  --shadow-soft: 0 8px 24px -10px rgba(16, 42, 131, 0.12);
+  --shadow-dock: 0 24px 60px -15px rgba(16, 42, 131, 0.14);
+}
+
+:root {
+  --bg-page: #f6f7fb;
+  --bg-input: #ffffff;
+  --bg-subtle: #eaedf5;
+  --brand-950: #08174b;
+  --brand-900: #102a83;
+  --brand-800: #183ba8;
+  --brand-700: #254ec9;
+  --accent-main: #f3d27a;
+  --accent-hover: #e8c15d;
+  --accent-soft: #f3d27a38;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  background-color: var(--bg-page);
+  color: #141714;
+  font-family: var(--font-sans);
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s ease;
+}
+
+/* Crisp organic inputs matching Area UI */
+.area-input {
+  background-color: var(--bg-input);
+  border: 1.5px solid rgba(16, 42, 131, 0.12);
+  transition: all 0.22s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.area-input:focus {
+  outline: none;
+  background-color: #ffffff;
+  border-color: var(--brand-900);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+/* Smooth step page transition */
+.step-page {
+  animation: pageSlideIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.app-screen {
+  display: none;
+  animation: screenFade 0.2s ease-out forwards;
+}
+
+.app-screen.active {
+  display: flex;
+}
+
+@keyframes screenFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ============================================================
+   Retint the legacy WAREHUB surfaces onto the area palette
+   (unlayered, so these win over the matching Tailwind utilities)
+   ============================================================ */
+.bg-black {
+  background-color: var(--brand-900);
+}
+
+.hover\:bg-neutral-800:hover {
+  background-color: var(--brand-800);
+}
+
+.bg-\[\#F6F6F6\] {
+  background-color: var(--bg-subtle);
+}
+
+.bg-\[\#FAFAFA\],
+.bg-\[\#F4F4F4\] {
+  background-color: #ffffff;
+}
+
+.bg-\[\#0D0D0D\] {
+  background-color: var(--brand-900);
+}
+
+.text-\[\#0D0D0D\],
+.text-\[\#1A1A1A\],
+.text-black {
+  color: var(--color-ink);
+}
+
+.text-\[\#7A7A7A\],
+.text-\[\#8E8E8E\],
+.text-\[\#4A4A4A\],
+.text-gray-400,
+.text-gray-500,
+.text-gray-600,
+.text-gray-700 {
+  color: var(--color-ink-muted);
+}
+
+.border-\[\#EBEBEB\],
+.border-\[\#E6E6E6\],
+.border-gray-100,
+.border-gray-200 {
+  border-color: rgba(16, 42, 131, 0.1);
+}
+
+.divide-gray-100 > :not(:last-child) {
+  border-color: rgba(16, 42, 131, 0.08);
+}
+
+.placeholder-\[\#8E8E8E\]::placeholder,
+.placeholder-gray-400::placeholder {
+  color: rgba(93, 99, 93, 0.65);
+}
+
+.selection\:bg-black::selection {
+  background-color: var(--accent-main);
+  color: var(--brand-950);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
