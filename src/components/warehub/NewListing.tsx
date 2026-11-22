@@ -489,26 +489,37 @@ export function NewListing({
   );
 
   return (
-    <section className="flex-1 flex flex-col bg-white">
-      <main className="w-full max-w-2xl mx-auto flex-1 flex flex-col">
-        <div className="flex-1 flex flex-col">
-          {/* FULL-SCREEN WIZARD — no outer wrapper, white fills the viewport */}
-          <section className="flex-1 flex flex-col justify-between gap-4 px-5 sm:px-8 pt-6 sm:pt-8 pb-6 sm:pb-8">
-            {/* Progress bar only — no brand mark, no step pill */}
-            <div className="flex items-center gap-2 shrink-0">
-              {[1, 2, 3, 4].map((i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => goToStep(i)}
-                  aria-label={`Step ${i}`}
-                  className={`h-1.5 flex-1 rounded-full transition-all cursor-pointer ${
-                    i <= step ? "bg-forest-900" : "bg-alabaster-card"
-                  }`}
-                />
-              ))}
-            </div>
+    /*
+     * Layout strategy:
+     * - Outer: `h-dvh overflow-hidden` → prevents page scroll by default
+     * - Progress bar: fixed at very top of the wizard panel
+     * - Scrollable content area: `overflow-y-auto flex-1` → only this region scrolls
+     * - Action footer: `sticky bottom-0` inside the scrollable area so it's always
+     *   reachable. When the mobile keyboard opens, the viewport shrinks and the
+     *   sticky footer scrolls into view naturally — nothing overlaps.
+     */
+    <section className="flex flex-col bg-white" style={{ height: "100dvh", overflow: "hidden" }}>
+      {/* Fixed top: progress bar */}
+      <div className="shrink-0 px-5 sm:px-8 pt-5 pb-3 bg-white z-10">
+        <div className="w-full max-w-2xl mx-auto flex items-center gap-2">
+          {[1, 2, 3, 4].map((i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => goToStep(i)}
+              aria-label={`Step ${i}`}
+              className={`h-1.5 flex-1 rounded-full transition-all cursor-pointer ${
+                i <= step ? "bg-forest-900" : "bg-alabaster-card"
+              }`}
+            />
+          ))}
+        </div>
+      </div>
 
+      {/* Scrollable content + sticky footer */}
+      <div className="flex-1 overflow-y-auto">
+        <main className="w-full max-w-2xl mx-auto flex flex-col min-h-full">
+          <div className="flex-1 px-5 sm:px-8 pb-4">
             {/* FORM PAGES CONTAINER */}
             <form
               ref={formRef}
@@ -516,11 +527,11 @@ export function NewListing({
                 e.preventDefault();
                 nextStep();
               }}
-              className="flex-1 flex flex-col justify-center"
+              className="flex flex-col"
             >
               {/* ========================= PAGE 1: TYPE & TITLE */}
               {step === 1 && (
-                <div className="step-page space-y-5 sm:space-y-6">
+                <div className="step-page space-y-4 pt-2">
                   <div>
                     {stepBadge}
                     <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight text-ink leading-tight">
@@ -532,11 +543,11 @@ export function NewListing({
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3.5">
+                  <div className="grid grid-cols-2 gap-3">
                     <button
                       type="button"
                       onClick={() => setCategory("Land Plot")}
-                      className={`p-4 sm:p-5 rounded-[22px] text-left transition-all cursor-pointer flex flex-col justify-between min-h-[128px] sm:min-h-[144px] ${
+                      className={`p-4 rounded-[22px] text-left transition-all cursor-pointer flex flex-col justify-between min-h-[112px] ${
                         category === "Land Plot"
                           ? "bg-forest-900 text-white ring-2 ring-forest-900 shadow-md shadow-forest-900/15"
                           : "bg-alabaster-light hover:bg-alabaster text-ink border border-black/5"
@@ -586,7 +597,7 @@ export function NewListing({
                     <button
                       type="button"
                       onClick={() => setCategory("Warehouse")}
-                      className={`p-4 sm:p-5 rounded-[22px] text-left transition-all cursor-pointer flex flex-col justify-between min-h-[128px] sm:min-h-[144px] ${
+                      className={`p-4 rounded-[22px] text-left transition-all cursor-pointer flex flex-col justify-between min-h-[112px] ${
                         category === "Warehouse"
                           ? "bg-forest-900 text-white ring-2 ring-forest-900 shadow-md shadow-forest-900/15"
                           : "bg-alabaster-light hover:bg-alabaster text-ink border border-black/5"
@@ -661,7 +672,7 @@ export function NewListing({
 
               {/* ========================= PAGE 2: PHOTOS */}
               {step === 2 && (
-                <div className="step-page space-y-4 sm:space-y-5">
+                <div className="step-page space-y-4 pt-2">
                   <div>
                     {stepBadge}
                     <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight text-ink leading-tight">
@@ -680,7 +691,7 @@ export function NewListing({
                       e.preventDefault();
                       void onFilesSelected(e.dataTransfer.files);
                     }}
-                    className="rounded-[24px] border-2 border-dashed border-forest-900/20 hover:border-forest-900 bg-alabaster-light/80 p-5 sm:p-7 text-center cursor-pointer transition-all group"
+                    className="rounded-[24px] border-2 border-dashed border-forest-900/20 hover:border-forest-900 bg-alabaster-light/80 p-5 text-center cursor-pointer transition-all group"
                   >
                     <input
                       id="f-photos"
@@ -752,7 +763,7 @@ export function NewListing({
 
               {/* ========================= PAGE 3: LOCATION, AREA & PRICE */}
               {step === 3 && (
-                <div className="step-page space-y-4">
+                <div className="step-page space-y-4 pt-2">
                   <div>
                     {stepBadge}
                     <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight text-ink leading-tight">
@@ -873,7 +884,7 @@ export function NewListing({
 
               {/* ========================= PAGE 4: PHONE & DESCRIPTION */}
               {step === 4 && (
-                <div className="step-page space-y-4">
+                <div className="step-page space-y-4 pt-2">
                   <div>
                     {stepBadge}
                     <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight text-ink leading-tight">
@@ -976,42 +987,42 @@ export function NewListing({
                 </div>
               )}
             </form>
+          </div>
 
-            {/* BOTTOM PAGINATION CONTROLS */}
-            <div className="pt-4 border-t border-forest-900/8 flex items-center justify-between gap-3 shrink-0">
-              {step > 1 ? (
-                <button
-                  type="button"
-                  onClick={prevStep}
-                  className="px-5 py-3.5 rounded-full bg-alabaster-light hover:bg-alabaster text-ink font-bold text-sm transition-all cursor-pointer border border-black/5"
-                >
-                  ← Back
-                </button>
-              ) : (
-                <div className="block" />
-              )}
-
+          {/* Sticky action footer — always visible, stays above keyboard */}
+          <div className="sticky bottom-0 bg-white px-5 sm:px-8 pt-3 pb-5 sm:pb-6 border-t border-forest-900/8 flex items-center justify-between gap-3">
+            {step > 1 ? (
               <button
                 type="button"
-                onClick={nextStep}
-                disabled={publishing || uploading}
-                className="flex-1 sm:flex-initial sm:min-w-[200px] py-3.5 px-7 rounded-full bg-limepop hover:bg-limepop-hover text-forest-950 font-extrabold text-sm tracking-tight shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-70"
+                onClick={prevStep}
+                className="px-5 py-3.5 rounded-full bg-alabaster hover:bg-alabaster-card text-ink font-bold text-sm transition-all cursor-pointer border border-black/5 shrink-0"
               >
-                <span>
-                  {publishing
-                    ? "Publishing..."
-                    : uploading
-                      ? "Uploading..."
-                      : step === 4
-                        ? (submitLabel || "Publish Listing")
-                        : "Continue"}
-                </span>
-                <span>→</span>
+                ← Back
               </button>
-            </div>
-          </section>
-        </div>
-      </main>
+            ) : (
+              <div className="block" />
+            )}
+
+            <button
+              type="button"
+              onClick={nextStep}
+              disabled={publishing || uploading}
+              className="flex-1 sm:flex-initial sm:min-w-[200px] py-3.5 px-7 rounded-full bg-limepop hover:bg-limepop-hover text-forest-950 font-extrabold text-sm tracking-tight shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-70"
+            >
+              <span>
+                {publishing
+                  ? "Publishing..."
+                  : uploading
+                    ? "Uploading..."
+                    : step === 4
+                      ? (submitLabel || "Publish Listing")
+                      : "Continue"}
+              </span>
+              <span>→</span>
+            </button>
+          </div>
+        </main>
+      </div>
 
       {published && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-5 bg-forest-950/60 backdrop-blur-sm">
